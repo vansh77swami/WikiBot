@@ -5,58 +5,22 @@ from PIL import Image
 import visual_content
 
 def get_wikipedia_summary(page_title):
-    try:
-        # Make a request to the Wikipedia API
-        url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{page_title}"
-        response = requests.get(url)
+    # Your existing code for fetching summary from Wikipedia
 
-        # Check if the request was successful
-        if response.status_code == 200:
-            data = response.json()
-            return data["extract"]
-        else:
-            return "Page not found."
+def get_web_search_results(query):
+    try:
+        # Make a request to the Google Search API or use a web scraping library
+        # to fetch search results based on the user's query
+        # Parse and extract the relevant information from the search results
+        # Return the search results as a list of titles and URLs
 
     except requests.exceptions.RequestException:
-        return "An error occurred while fetching data from Wikipedia."
-
-    except KeyError:
-        return "An unexpected error occurred."
+        return "An error occurred while fetching search results."
 
     except Exception as e:
         return str(e)
 
-def get_visual_content(page_title):
-    try:
-        urls = visual_content.retrieve_visual_content(page_title)
-        return urls
-    except Exception as e:
-        return str(e)
-
-def download_image(image_url):
-    try:
-        response = requests.get(image_url)
-        if response.status_code == 200:
-            image_data = response.content
-            image = Image.open(io.BytesIO(image_data))
-            return image
-        else:
-            return None
-    except requests.exceptions.RequestException:
-        return None
-    except Exception as e:
-        return None
-
-def display_image(image):
-    # Resize the image if necessary
-    max_width = 300
-    if image.width > max_width:
-        ratio = max_width / float(image.width)
-        height = int((float(image.height) * float(ratio)))
-        image = image.resize((max_width, height), Image.ANTIALIAS)
-
-    # Display the image
-    st.image(image, use_column_width=True)
+# Rest of your code
 
 def main():
     st.title("Wikipedia ChatBot")
@@ -66,16 +30,18 @@ def main():
         if user_input.lower() == "quit":
             st.write("ChatBot: Goodbye!")
         else:
-            summary = get_wikipedia_summary(user_input)
-            visual_urls = get_visual_content(user_input)
-
-            st.write(f"ChatBot: {summary}")
-
-            if visual_urls:
-                for image_url in visual_urls:
-                    image = download_image(image_url)
-                    if image:
-                        display_image(image)
+            # Check if the user's input is a question or a search query
+            if user_input.endswith('?'):
+                summary = get_wikipedia_summary(user_input)
+                st.write(f"ChatBot: {summary}")
+            else:
+                search_results = get_web_search_results(user_input)
+                if search_results:
+                    st.write("ChatBot: Here are some search results:")
+                    for title, url in search_results:
+                        st.write(f"- [{title}]({url})")
+                else:
+                    st.write("ChatBot: No search results found.")
 
 if __name__ == '__main__':
     main()
