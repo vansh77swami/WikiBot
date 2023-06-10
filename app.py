@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit.components.v1 import html
 import requests
 import io
 from PIL import Image
@@ -76,6 +77,11 @@ def main():
                     image = download_image(image_url)
                     if image:
                         display_image(image)
+
+    # Render the index.html file
+    with open("index.html", "r") as f:
+        html_content = f.read()
+    html(html_content, height=800)
 
 if __name__ == '__main__':
     main()
