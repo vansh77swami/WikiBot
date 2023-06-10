@@ -77,15 +77,25 @@ def main():
     st.title("WikiBot")
 
     user_input = st.text_input("User Input")
-    if st.button("Send"):
+
+    # Fetch suggestions based on user input
+    suggestions = []  # Add your suggestion logic here
+
+    selected_suggestion = st.selectbox("Suggestions", suggestions)
+
+    if selected_suggestion:
+        user_input = selected_suggestion
+
+    if st.button("Send") or st.session_state.enter_pressed:
         if user_input.lower() == "quit":
             st.write("WikiBot: Goodbye!")
         else:
             if not is_valid_input(user_input):
                 st.write("Invalid input. Please enter a valid search term.")
             else:
-                summary = get_wikipedia_summary(user_input)
-                visual_urls = get_visual_content(user_input)
+                with st.spinner("Fetching data..."):
+                    summary = get_wikipedia_summary(user_input)
+                    visual_urls = get_visual_content(user_input)
 
                 st.write(f"WikiBot: {summary}")
 
