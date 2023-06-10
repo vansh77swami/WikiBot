@@ -26,33 +26,6 @@ def get_wikipedia_summary(page_title):
     except Exception as e:
         return str(e)
 
-def get_web_search_results(query):
-    try:
-        # Make a request to the Google Search API
-        url = "https://www.googleapis.com/customsearch/v1"
-        params = {
-            "key": "AIzaSyAOakIeKXIPgS3LupdGZ91RjZ0GiqAuVXg",
-            "cx": "f7687090c04d34826",
-            "q": query
-        }
-        response = requests.get(url, params=params)
-
-        # Check if the request was successful
-        if response.status_code == 200:
-            data = response.json()
-            items = data.get("items", [])
-            search_results = [(item["title"], item["link"]) for item in items]
-            return search_results
-        else:
-            return None
-
-    except requests.exceptions.RequestException:
-        return "An error occurred while fetching search results."
-
-    except Exception as e:
-        return str(e)
-
-
 def get_visual_content(page_title):
     try:
         urls = visual_content.retrieve_visual_content(page_title)
@@ -93,26 +66,16 @@ def main():
         if user_input.lower() == "quit":
             st.write("ChatBot: Goodbye!")
         else:
-            # Check if the user's input is a question or a search query
-            if user_input.endswith('?'):
-                summary = get_wikipedia_summary(user_input)
-                st.write(f"ChatBot: {summary}")
-            else:
-                search_results = get_web_search_results(user_input)
-                if search_results:
-                    st.write("ChatBot: Here are some search results:")
-                    for title, url in search_results:
-                        st.write(f"- [{title}]({url})")
-                else:
-                    st.write("ChatBot: No search results found.")
-
+            summary = get_wikipedia_summary(user_input)
             visual_urls = get_visual_content(user_input)
+
+            st.write(f"ChatBot: {summary}")
+
             if visual_urls:
                 for image_url in visual_urls:
                     image = download_image(image_url)
                     if image:
                         display_image(image)
 
-
 if __name__ == '__main__':
-    main()
+    main()s
