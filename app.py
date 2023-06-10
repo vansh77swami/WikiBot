@@ -82,20 +82,9 @@ def main():
             if image:
                 display_image(image)
 
-        st.markdown("""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Wikipedia ChatBot</title>
-            <style>
-                /* Add your CSS styles here */
-            </style>
-        </head>
-        <body>
-            <!-- Add your HTML content here -->
-        </body>
-        </html>
-        """, unsafe_allow_html=True)
+        with open("index.html", "r", encoding="utf-8") as file:
+            html_code = file.read()
+            st.markdown(html_code, unsafe_allow_html=True)
 
 
 if __name__ == '__main__':
