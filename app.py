@@ -4,6 +4,65 @@ import io
 from PIL import Image
 import visual_content
 
+# Custom CSS styles
+st.markdown("""
+<style>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.logo {
+    color: #8e8ea0;
+    animation: enlarge-appear 0.4s ease-out;
+    stroke: #8e8ea0;
+    stroke-width: 2;
+}
+
+@keyframes enlarge-appear {
+    0% {
+        opacity: 0;
+        transform: scale(75%) rotate(-90deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(100%) rotate(0deg);
+    }
+}
+
+.data {
+    border-radius: 5px;
+    color: #8e8ea0;
+    text-align: center;
+}
+
+.data:empty {
+    display: none;
+}
+
+body {
+    background-color: #343541;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #343541;
+    }
+
+    .logo {
+        color: #acacbe;
+        stroke: #acacbe;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
 def get_wikipedia_summary(page_title):
     try:
         # Make a request to the Wikipedia API
@@ -61,6 +120,9 @@ def display_image(image):
 def main():
     st.title("Wikipedia ChatBot")
 
+    # Apply the custom CSS class to the container div
+    st.markdown('<div class="container">', unsafe_allow_html=True)
+
     user_input = st.text_input("User Input")
     if st.button("Send"):
         if user_input.lower() == "quit":
@@ -69,13 +131,4 @@ def main():
             summary = get_wikipedia_summary(user_input)
             visual_urls = get_visual_content(user_input)
 
-            st.write(f"ChatBot: {summary}")
-
-            if visual_urls:
-                for image_url in visual_urls:
-                    image = download_image(image_url)
-                    if image:
-                        display_image(image)
-
-if __name__ == '__main__':
-    main()
+            st.markdown('<div class="data">', unsafe_allow_html=True.
