@@ -59,7 +59,7 @@ def display_image(image):
     st.image(image, use_column_width=True)
 
 def main():
-    st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne.jpg")
+    st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
 
     st.title("WikiBot")
 
