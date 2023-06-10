@@ -7,7 +7,7 @@
             font-family: Arial, sans-serif;
             background-color: #F3F3F3;
         }
-
+    
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -17,7 +17,7 @@
             background-color: #FFFFFF;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
+    
         .chatbox {
             height: 500px;
             border: 1px solid #AAAAAA;
@@ -27,43 +27,158 @@
             background-color: #FFFFFF;
             color: #333333;
         }
-
+    
         .message {
             margin-bottom: 10px;
         }
-
+    
+        .user-message {
+            background-color: #E8F5FD;
+            padding: 10px;
+            border-radius: 10px;
+            color: #000000;
+        }
+    
         .bot-message {
             background-color: #F8F8F8;
             padding: 10px;
             border-radius: 10px;
             color: #333333;
         }
+    
+        .input-container {
+            display: flex;
+        }
+    
+        .input-field {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #AAAAAA;
+            border-radius: 3px;
+        }
+    
+        .send-button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    
+        .theme-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+    
+        .theme-label {
+            margin-right: 10px;
+            color: #FFFFFF;
+        }
+    
+        .theme-select {
+            padding: 5px;
+            border: 1px solid #AAAAAA;
+            border-radius: 3px;
+        }
+    
+        .light-theme {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+    
+        .dark-theme {
+            background-color: #333333;
+            color: #FFFFFF;
+        }
     </style>
+    
 </head>
 <body>
     <div class="container">
         <div class="chatbox" id="chatbox"></div>
+        <div class="input-container">
+            <input type="text" class="input-field" id="chat-input" placeholder="Type your message..." />
+            <button class="send-button" id="send-button">Send</button>
+        </div>
+        <div class="theme-container">
+            <span class="theme-label">Theme:</span>
+            <select class="theme-select" id="theme-select">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var chatbox = document.getElementById("chatbox");
+    var chatbox = document.getElementById("chatbox");
+    var chatInput = document.getElementById("chat-input");
+    var sendButton = document.getElementById("send-button");
+    var themeSelect = document.getElementById("theme-select");
 
-            function displayBotMessage(message) {
+    sendButton.addEventListener("click", function() {
+        var userInput = chatInput.value.trim();
+        if (userInput !== "") {
+            displayUserMessage(userInput);
+            // Send user input to the server and process the response
+            fetch('/process_input', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'user_input=' + encodeURIComponent(userInput)
+            })
+            .then(response => response.text())
+            .then(data => displayBotMessage(data))
+            .catch(error => console.log(error));
+        }
+    });
+
+
+            chatInput.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    sendButton.click();
+                }
+            });
+
+            themeSelect.addEventListener("change", function() {
+                var selectedTheme = themeSelect.value;
+
+                if (selectedTheme === "light") {
+                    document.body.classList.remove("dark-theme");
+                    document.body.classList.add("light-theme");
+                    chatbox.classList.remove("dark-theme");
+                    chatbox.classList.add("light-theme");
+                } else if (selectedTheme === "dark") {
+                    document.body.classList.remove("light-theme");
+                    document.body.classList.add("dark-theme");
+                    chatbox.classList.remove("light-theme");
+                    chatbox.classList.add("dark-theme");
+                }
+            });
+
+            function displayUserMessage(message) {
                 var messageDiv = document.createElement("div");
                 messageDiv.classList.add("message");
-                messageDiv.classList.add("bot-message");
-                messageDiv.textContent = "Bot: " + message;
+                messageDiv.classList.add("user-message");
+                messageDiv.textContent = "You: " + message;
                 chatbox.appendChild(messageDiv);
                 chatbox.scrollTop = chatbox.scrollHeight;
+                chatInput.value = "";
             }
 
-            // Retrieve the response from the server and display it
-            fetch('/process_input')
-                .then(response => response.text())
-                .then(data => displayBotMessage(data))
-                .catch(error => console.log(error));
-        });
+            function displayBotMessage(message) {
+    var messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.classList.add("bot-message");
+    messageDiv.textContent = "Bot: " + message.replace(/^ChatBot:\s*/, "");
+    chatbox.appendChild(messageDiv);
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+});
     </script>
 </body>
 </html>
