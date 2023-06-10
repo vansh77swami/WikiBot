@@ -28,17 +28,30 @@ def get_wikipedia_summary(page_title):
 
 def get_web_search_results(query):
     try:
-        # Make a request to the web search API or use a web scraping library
-        # to fetch search results based on the user's query
-        # Parse and extract the relevant information from the search results
-        # Return the search results as a list of titles and URLs
-        pass  # Add your code here
+        # Make a request to the Google Search API
+        url = "https://www.googleapis.com/customsearch/v1"
+        params = {
+            "key": "AIzaSyAOakIeKXIPgS3LupdGZ91RjZ0GiqAuVXg",
+            "cx": "YOUR_CUSTOM_SEARCH_ENGINE_ID",
+            "q": query
+        }
+        response = requests.get(url, params=params)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("items", [])
+            search_results = [(item["title"], item["link"]) for item in items]
+            return search_results
+        else:
+            return None
 
     except requests.exceptions.RequestException:
         return "An error occurred while fetching search results."
 
     except Exception as e:
         return str(e)
+
 
 def get_visual_content(page_title):
     try:
