@@ -32,6 +32,7 @@ def get_web_search_results(query):
         # to fetch search results based on the user's query
         # Parse and extract the relevant information from the search results
         # Return the search results as a list of titles and URLs
+        pass  # Add your code here
 
     except requests.exceptions.RequestException:
         return "An error occurred while fetching search results."
