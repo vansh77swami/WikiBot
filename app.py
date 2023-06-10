@@ -61,9 +61,6 @@ def display_image(image):
 def main():
     st.title("Wikipedia ChatBot")
 
-    # Initialize chat history list
-    chat_history = []
-
     user_input = st.text_input("User Input")
     if st.button("Send"):
         if user_input.lower() == "quit":
@@ -72,22 +69,13 @@ def main():
             summary = get_wikipedia_summary(user_input)
             visual_urls = get_visual_content(user_input)
 
-            # Add user input and chat response to the chat history
-            chat_history.append(("User", user_input))
-            chat_history.append(("ChatBot", summary))
-
-            # Display chat history
-            for sender, message in chat_history:
-                if sender == "User":
-                    st.text_input("User", value=message, key=message, disabled=True)
-                else:
-                    st.text_area("ChatBot", value=message, key=message, disabled=True)
+            st.write(f"ChatBot: {summary}")
 
             if visual_urls:
-                image_url = visual_urls[0]  # Assuming the first URL is the desired image
-                image = download_image(image_url)
-                if image:
-                    display_image(image)
+                for image_url in visual_urls:
+                    image = download_image(image_url)
+                    if image:
+                        display_image(image)
 
 if __name__ == '__main__':
     main()
