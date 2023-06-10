@@ -78,7 +78,10 @@ def main():
 
             # Display chat history
             for sender, message in chat_history:
-                st.write(f"{sender}: {message}")
+                if sender == "User":
+                    st.text_input("User", value=message, key=message, disabled=True)
+                else:
+                    st.text_area("ChatBot", value=message, key=message, disabled=True)
 
             if visual_urls:
                 image_url = visual_urls[0]  # Assuming the first URL is the desired image
