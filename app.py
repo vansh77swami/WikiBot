@@ -3,6 +3,7 @@ import requests
 import io
 from PIL import Image
 import visual_content
+from streamlit import components
 
 def get_wikipedia_summary(page_title):
     try:
@@ -84,4 +85,10 @@ def main():
 
 # Run the app
 if __name__ == '__main__':
+    # Render the custom HTML interface
+    html_file = open("index.html", "r", encoding="utf-8")
+    html_code = html_file.read()
+    components.html(html_code, height=500)
+
+    # Run the Streamlit app
     main()
