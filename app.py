@@ -1,9 +1,8 @@
+import streamlit as st
 import requests
+import io
 from PIL import Image
 import visual_content
-from flask import Flask, render_template, request
-
-app = Flask(__name__)
 
 def get_wikipedia_summary(page_title):
     try:
@@ -56,26 +55,25 @@ def display_image(image):
         height = int((float(image.height) * float(ratio)))
         image = image.resize((max_width, height), Image.ANTIALIAS)
 
-    # Display the image (modify this according to your HTML structure)
-    print(f"Display image: {image}")
+    # Display the image
+    st.image(image)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Create the main Streamlit app
+def main():
+    st.title("Wikipedia ChatBot")
 
-@app.route('/process_input', methods=['POST'])
-def process_input():
-    user_input = request.form.get('user_input')
+    # Get user input
+    user_input = st.text_input("Enter a topic")
 
     if user_input.lower() == "quit":
-        response = "ChatBot: Goodbye!"
+        st.write("ChatBot: Goodbye!")
     else:
         # Process user input and generate a response
         summary = get_wikipedia_summary(user_input)
         visual_urls = get_visual_content(user_input)
 
-        # Generate the chatbot response
-        response = "ChatBot: " + summary
+        # Display the summary
+        st.write("ChatBot:", summary)
 
         if visual_urls:
             # Display the first image
@@ -84,7 +82,11 @@ def process_input():
             if image:
                 display_image(image)
 
-    return response
+# Render the custom HTML interface
+html_file = open("index.html", "r", encoding="utf-8")
+html_code = html_file.read()
 
+# Run the Streamlit app
 if __name__ == '__main__':
-    app.run()
+    st.markdown(html_code, unsafe_allow_html=True)
+    main()
