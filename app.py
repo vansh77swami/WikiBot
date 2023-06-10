@@ -3,7 +3,6 @@ import requests
 import io
 from PIL import Image
 import visual_content
-import re
 
 def get_wikipedia_summary(page_title):
     try:
@@ -65,30 +64,20 @@ def main():
     st.title("WikiBot")
 
     user_input = st.text_input("User Input")
-
-    # Check if user pressed Enter key
-    enter_pressed = st.button("Send", key="send_button") or st.session_state.enter_pressed
-    if enter_pressed:
-        # Reset the enter_pressed session state to avoid multiple executions
-        st.session_state.enter_pressed = False
-
-        # Input validation
-        if not user_input.strip():
-            st.write("Please enter a valid query.")
+    if st.button("Send"):
+        if user_input.lower() == "quit":
+            st.write("WikiBot: Goodbye!")
         else:
-            if user_input.lower() == "quit":
-                st.write("WikiBot: Goodbye!")
-            else:
-                summary = get_wikipedia_summary(user_input)
-                visual_urls = get_visual_content(user_input)
+            summary = get_wikipedia_summary(user_input)
+            visual_urls = get_visual_content(user_input)
 
-                st.write(f"WikiBot: {summary}")
+            st.write(f"WikiBot: {summary}")
 
-                if visual_urls:
-                    for image_url in visual_urls:
-                        image = download_image(image_url)
-                        if image:
-                            display_image(image)
+            if visual_urls:
+                for image_url in visual_urls:
+                    image = download_image(image_url)
+                    if image:
+                        display_image(image)
 
 if __name__ == '__main__':
     main()
