@@ -1,6 +1,9 @@
 import requests
 from PIL import Image
 import visual_content
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
 
 def get_wikipedia_summary(page_title):
     try:
@@ -56,10 +59,16 @@ def display_image(image):
     # Display the image (modify this according to your HTML structure)
     print(f"Display image: {image}")
 
-# Create the main function
-def chatbot_main(user_input):
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/process_input', methods=['POST'])
+def process_input():
+    user_input = request.form.get('user_input')
+
     if user_input.lower() == "quit":
-        return "ChatBot: Goodbye!"
+        response = "ChatBot: Goodbye!"
     else:
         # Process user input and generate a response
         summary = get_wikipedia_summary(user_input)
@@ -75,12 +84,7 @@ def chatbot_main(user_input):
             if image:
                 display_image(image)
 
-        return response
+    return response
 
-# Run the chatbot
 if __name__ == '__main__':
-    while True:
-        user_input = input("Enter a topic: ")
-        response = chatbot_main(user_input)
-        print(response)
-        print()
+    app.run()
