@@ -3,6 +3,11 @@ import requests
 import io
 from PIL import Image
 import visual_content
+import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
+from nltk.tokenize import word_tokenize
+
+nltk.download("vader_lexicon")
 
 def get_wikipedia_summary(page_title):
     try:
@@ -58,6 +63,13 @@ def display_image(image):
     # Display the image
     st.image(image, use_column_width=True)
 
+def analyze_sentiment(user_input):
+    sia = SentimentIntensityAnalyzer()
+    tokens = word_tokenize(user_input)
+    scores = [sia.polarity_scores(token)["compound"] for token in tokens]
+    sentiment_score = sum(scores) / len(scores)
+    return sentiment_score
+
 def main():
     st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
 
@@ -68,6 +80,15 @@ def main():
         if user_input.lower() == "quit":
             st.write("WikiBot: Goodbye!")
         else:
+            sentiment_score = analyze_sentiment(user_input)
+
+            if sentiment_score >= 0.5:
+                st.write("User Sentiment: Positive")
+            elif sentiment_score <= -0.5:
+                st.write("User Sentiment: Negative")
+            else:
+                st.write("User Sentiment: Neutral")
+
             summary = get_wikipedia_summary(user_input)
             visual_urls = get_visual_content(user_input)
 
