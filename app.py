@@ -3,6 +3,7 @@ import requests
 import io
 from PIL import Image
 import visual_content
+import re
 
 def get_wikipedia_summary(page_title):
     try:
@@ -58,6 +59,18 @@ def display_image(image):
     # Display the image
     st.image(image, use_column_width=True)
 
+def is_valid_input(user_input):
+    # Check if the input is not empty
+    if not user_input:
+        return False
+
+    # Check if the input contains invalid characters
+    invalid_chars = re.findall(r"[^\w\s]", user_input)
+    if invalid_chars:
+        return False
+
+    return True
+
 def main():
     st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
 
@@ -68,16 +81,19 @@ def main():
         if user_input.lower() == "quit":
             st.write("WikiBot: Goodbye!")
         else:
-            summary = get_wikipedia_summary(user_input)
-            visual_urls = get_visual_content(user_input)
+            if not is_valid_input(user_input):
+                st.write("Invalid input. Please enter a valid search term.")
+            else:
+                summary = get_wikipedia_summary(user_input)
+                visual_urls = get_visual_content(user_input)
 
-            st.write(f"WikiBot: {summary}")
+                st.write(f"WikiBot: {summary}")
 
-            if visual_urls:
-                for image_url in visual_urls:
-                    image = download_image(image_url)
-                    if image:
-                        display_image(image)
+                if visual_urls:
+                    for image_url in visual_urls:
+                        image = download_image(image_url)
+                        if image:
+                            display_image(image)
 
 if __name__ == '__main__':
     main()
