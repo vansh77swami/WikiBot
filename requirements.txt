@@ -2,5 +2,6 @@ Flask
 requests
 Pillow
 beautifulsoup4
-nltk
+nltk==3.6.3
+
 
