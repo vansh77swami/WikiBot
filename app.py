@@ -59,19 +59,19 @@ def display_image(image):
     st.image(image, use_column_width=True)
 
 def main():
-    st.set_page_config(page_title="ChatBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
+    st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
 
-    st.title("ChatBot")
+    st.title("WikiBot")
 
     user_input = st.text_input("User Input")
     if st.button("Send"):
         if user_input.lower() == "quit":
-            st.write("ChatBot: Goodbye!")
+            st.write("WikiBot: Goodbye!")
         else:
             summary = get_wikipedia_summary(user_input)
             visual_urls = get_visual_content(user_input)
 
-            st.write(f"ChatBot: {summary}")
+            st.write(f"WikiBot: {summary}")
 
             if visual_urls:
                 for image_url in visual_urls:
