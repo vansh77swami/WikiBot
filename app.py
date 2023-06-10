@@ -26,6 +26,19 @@ def get_wikipedia_summary(page_title):
     except Exception as e:
         return str(e)
 
+def get_web_search_results(query):
+    try:
+        # Make a request to the web search API or use a web scraping library
+        # to fetch search results based on the user's query
+        # Parse and extract the relevant information from the search results
+        # Return the search results as a list of titles and URLs
+
+    except requests.exceptions.RequestException:
+        return "An error occurred while fetching search results."
+
+    except Exception as e:
+        return str(e)
+
 def get_visual_content(page_title):
     try:
         urls = visual_content.retrieve_visual_content(page_title)
@@ -66,11 +79,20 @@ def main():
         if user_input.lower() == "quit":
             st.write("ChatBot: Goodbye!")
         else:
-            summary = get_wikipedia_summary(user_input)
+            # Check if the user's input is a question or a search query
+            if user_input.endswith('?'):
+                summary = get_wikipedia_summary(user_input)
+                st.write(f"ChatBot: {summary}")
+            else:
+                search_results = get_web_search_results(user_input)
+                if search_results:
+                    st.write("ChatBot: Here are some search results:")
+                    for title, url in search_results:
+                        st.write(f"- [{title}]({url})")
+                else:
+                    st.write("ChatBot: No search results found.")
+
             visual_urls = get_visual_content(user_input)
-
-            st.write(f"ChatBot: {summary}")
-
             if visual_urls:
                 for image_url in visual_urls:
                     image = download_image(image_url)
