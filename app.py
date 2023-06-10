@@ -1,4 +1,3 @@
-import streamlit as st
 import requests
 from PIL import Image
 import visual_content
@@ -54,25 +53,20 @@ def display_image(image):
         height = int((float(image.height) * float(ratio)))
         image = image.resize((max_width, height), Image.ANTIALIAS)
 
-    # Display the image
-    st.image(image)
+    # Display the image (modify this according to your HTML structure)
+    print(f"Display image: {image}")
 
-# Create the main Streamlit app
-def main():
-    st.title("Wikipedia ChatBot")
-
-    # Get user input
-    user_input = st.text_input("Enter a topic")
-
+# Create the main function
+def chatbot_main(user_input):
     if user_input.lower() == "quit":
-        st.write("ChatBot: Goodbye!")
+        return "ChatBot: Goodbye!"
     else:
         # Process user input and generate a response
         summary = get_wikipedia_summary(user_input)
         visual_urls = get_visual_content(user_input)
 
-        # Display the summary
-        st.write("ChatBot:", summary)
+        # Generate the chatbot response
+        response = "ChatBot: " + summary
 
         if visual_urls:
             # Display the first image
@@ -81,6 +75,12 @@ def main():
             if image:
                 display_image(image)
 
-# Run the app
+        return response
+
+# Run the chatbot
 if __name__ == '__main__':
-    main()
+    while True:
+        user_input = input("Enter a topic: ")
+        response = chatbot_main(user_input)
+        print(response)
+        print()
