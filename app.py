@@ -72,10 +72,10 @@ def main():
             st.write(f"ChatBot: {summary}")
 
             if visual_urls:
-                image_url = visual_urls[0]  # Assuming the first URL is the desired image
-                image = download_image(image_url)
-                if image:
-                    display_image(image)
+                for image_url in visual_urls:
+                    image = download_image(image_url)
+                    if image:
+                        display_image(image)
 
 if __name__ == '__main__':
     main()
