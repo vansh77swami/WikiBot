@@ -4,6 +4,7 @@ import io
 from PIL import Image
 import visual_content
 
+
 def get_wikipedia_summary(page_title):
     try:
         # Make a request to the Wikipedia API
@@ -26,12 +27,14 @@ def get_wikipedia_summary(page_title):
     except Exception as e:
         return str(e)
 
+
 def get_visual_content(page_title):
     try:
         urls = visual_content.retrieve_visual_content(page_title)
         return urls
     except Exception as e:
         return str(e)
+
 
 def download_image(image_url):
     try:
@@ -47,6 +50,7 @@ def download_image(image_url):
     except Exception as e:
         return None
 
+
 def display_image(image):
     # Resize the image if necessary
     max_width = 300
@@ -58,35 +62,30 @@ def display_image(image):
     # Display the image
     st.image(image)
 
-# Create the main Streamlit app
+
 def main():
     st.title("Wikipedia ChatBot")
 
-    # Get user input
     user_input = st.text_input("Enter a topic")
 
     if user_input.lower() == "quit":
         st.write("ChatBot: Goodbye!")
     else:
-        # Process user input and generate a response
         summary = get_wikipedia_summary(user_input)
         visual_urls = get_visual_content(user_input)
 
-        # Display the summary
         st.write("ChatBot:", summary)
 
         if visual_urls:
-            # Display the first image
             image_url = visual_urls[0]  # Assuming the first URL is the desired image
             image = download_image(image_url)
             if image:
                 display_image(image)
 
-# Render the custom HTML interface
-html_file = open("index.html", "r", encoding="utf-8")
-html_code = html_file.read()
+        with open("index.html", "r", encoding="utf-8") as file:
+            html_code = file.read()
+            st.markdown(html_code, unsafe_allow_html=True)
 
-# Run the Streamlit app
+
 if __name__ == '__main__':
-    st.markdown(html_code, unsafe_allow_html=True)
     main()
