@@ -32,7 +32,7 @@ def get_web_search_results(query):
         url = "https://www.googleapis.com/customsearch/v1"
         params = {
             "key": "AIzaSyAOakIeKXIPgS3LupdGZ91RjZ0GiqAuVXg",
-            "cx": "YOUR_CUSTOM_SEARCH_ENGINE_ID",
+            "cx": "f7687090c04d34826",
             "q": query
         }
         response = requests.get(url, params=params)
