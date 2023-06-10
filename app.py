@@ -78,4 +78,4 @@ def main():
                         display_image(image)
 
 if __name__ == '__main__':
-    main()s
+    main()
