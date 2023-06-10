@@ -66,12 +66,12 @@ def main():
     user_input = st.text_input("User Input")
     if st.button("Send"):
         if user_input.lower() == "quit":
-            st.write("WikiBot: Goodbye!")
+            st.write("ChatBot: Goodbye!")
         else:
             summary = get_wikipedia_summary(user_input)
             visual_urls = get_visual_content(user_input)
 
-            st.write(f"WikiBot: {summary}")
+            st.write(f"ChatBot: {summary}")
 
             if visual_urls:
                 for image_url in visual_urls:
