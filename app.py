@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import io
 from PIL import Image
 import visual_content
 
@@ -82,11 +81,6 @@ def main():
             if image:
                 display_image(image)
 
-# Render the custom HTML interface
-html_file = open("index.html", "r", encoding="utf-8")
-html_code = html_file.read()
-
-# Run the Streamlit app
+# Run the app
 if __name__ == '__main__':
-    st.markdown(html_code, unsafe_allow_html=True)
     main()
