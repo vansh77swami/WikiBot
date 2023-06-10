@@ -4,6 +4,7 @@ import io
 from PIL import Image
 import visual_content
 import re
+import time
 
 def get_wikipedia_summary(page_title):
     try:
@@ -76,7 +77,7 @@ def main():
 
     st.title("WikiBot")
 
-    user_input = st.text_input("User Input")
+    user_input = st.text_input("User Input", key="user_input")
 
     # Fetch suggestions based on user input
     suggestions = []  # Add your suggestion logic here
@@ -86,7 +87,7 @@ def main():
     if selected_suggestion:
         user_input = selected_suggestion
 
-    if st.button("Send") or st.session_state.enter_pressed:
+    if st.button("Send") or st.text_input("Enter", key="enter_input", on_change=True):
         if user_input.lower() == "quit":
             st.write("WikiBot: Goodbye!")
         else:
