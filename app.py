@@ -3,8 +3,6 @@ import requests
 import io
 from PIL import Image
 import visual_content
-import re
-import time
 
 def get_wikipedia_summary(page_title):
     try:
@@ -60,51 +58,26 @@ def display_image(image):
     # Display the image
     st.image(image, use_column_width=True)
 
-def is_valid_input(user_input):
-    # Check if the input is not empty
-    if not user_input:
-        return False
-
-    # Check if the input contains invalid characters
-    invalid_chars = re.findall(r"[^\w\s]", user_input)
-    if invalid_chars:
-        return False
-
-    return True
-
 def main():
     st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
 
     st.title("WikiBot")
 
-    user_input = st.text_input("User Input", key="user_input")
-
-    # Fetch suggestions based on user input
-    suggestions = []  # Add your suggestion logic here
-
-    selected_suggestion = st.selectbox("Suggestions", suggestions)
-
-    if selected_suggestion:
-        user_input = selected_suggestion
-
-    if st.button("Send") or st.text_input("Enter", key="enter_input", on_change=True):
+    user_input = st.text_input("User Input")
+    if st.button("Send"):
         if user_input.lower() == "quit":
             st.write("WikiBot: Goodbye!")
         else:
-            if not is_valid_input(user_input):
-                st.write("Invalid input. Please enter a valid search term.")
-            else:
-                with st.spinner("Fetching data..."):
-                    summary = get_wikipedia_summary(user_input)
-                    visual_urls = get_visual_content(user_input)
+            summary = get_wikipedia_summary(user_input)
+            visual_urls = get_visual_content(user_input)
 
-                st.write(f"WikiBot: {summary}")
+            st.write(f"WikiBot: {summary}")
 
-                if visual_urls:
-                    for image_url in visual_urls:
-                        image = download_image(image_url)
-                        if image:
-                            display_image(image)
+            if visual_urls:
+                for image_url in visual_urls:
+                    image = download_image(image_url)
+                    if image:
+                        display_image(image)
 
 if __name__ == '__main__':
     main()
