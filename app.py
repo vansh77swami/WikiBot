@@ -113,5 +113,6 @@ def main():
                     if image:
                         display_image(image)
 
+
 if __name__ == '__main__':
     main()
