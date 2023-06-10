@@ -61,14 +61,15 @@ def display_image(image):
 def main():
     st.title("WikiBot")
 
-    user_input = st.text_input("User Input")
+    user_input = st.text_input("User Input", key="user_input")
 
-    if st.button("Send") or st.session_state.enter_pressed:
-        if user_input.lower() == "quit":
+    if st.button("Send") or (st.session_state.user_input and st.session_state.user_input[-1] == '\n'):
+        st.session_state.user_input = st.session_state.user_input.rstrip('\n')
+        if st.session_state.user_input.lower() == "quit":
             st.write("WikiBot: Goodbye!")
         else:
-            summary = get_wikipedia_summary(user_input)
-            visual_urls = get_visual_content(user_input)
+            summary = get_wikipedia_summary(st.session_state.user_input)
+            visual_urls = get_visual_content(st.session_state.user_input)
 
             st.write(f"WikiBot: {summary}")
 
@@ -78,14 +79,9 @@ def main():
                     if image:
                         display_image(image)
 
-    # Register the Enter key press event
-    if st.session_state.enter_pressed:
-        st.session_state.enter_pressed = False
-
-    # Capture the Enter key press event
-    if user_input and st.session_state.enter_pressed is False:
-        st.session_state.enter_pressed = st.session_event.type == "key_press" and st.session_event.key == "Enter"
-
+    # Clear the input field after sending the message
+    if st.session_state.user_input and st.session_state.user_input[-1] == '\n':
+        st.session_state.user_input = ''
 
 if __name__ == '__main__':
     main()
