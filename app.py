@@ -68,11 +68,9 @@ def main():
         if user_input.lower() == "quit":
             st.write("WikiBot: Goodbye!")
         else:
-            summary = get_wikipedia_summary(user_input)
-            visual_urls = get_visual_content(user_input)
-
+            summary = get_wikipedia_summary(user_input.upper())  # Use upper() to ensure consistent formatting
             st.write(f"WikiBot: {summary}")
-
 
 if __name__ == '__main__':
     main()
+
