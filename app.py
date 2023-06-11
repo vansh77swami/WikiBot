@@ -1,8 +1,5 @@
+import streamlit as st
 import requests
-import visual_content
-from flask import Flask, request
-
-app = Flask(__name__)
 
 def get_wikipedia_summary(page_title):
     try:
@@ -26,37 +23,22 @@ def get_wikipedia_summary(page_title):
     except Exception as e:
         return str(e)
 
-def get_visual_content(page_title):
-    try:
-        urls = visual_content.retrieve_visual_content(page_title)
-        return urls
-    except Exception as e:
-        return str(e)
 
-@app.route('/', methods=['GET', 'POST'])
+
 def main():
-    if request.method == 'POST':
-        user_input = request.form['user_input']
+    st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
+
+    st.title("WikiBot")
+
+    user_input = st.text_input("User Input")
+    if st.button("Send"):
         if user_input.lower() == "quit":
-            return "WikiBot: Goodbye!"
+            st.write("WikiBot: Goodbye!")
         else:
             summary = get_wikipedia_summary(user_input)
-            return f"WikiBot: {summary}"
-    else:
-        return '''
-        <html>
-        <head>
-            <title>WikiBot</title>
-        </head>
-        <body>
-            <h1>WikiBot</h1>
-            <form action="/" method="post">
-                <input type="text" name="user_input" placeholder="User Input">
-                <input type="submit" value="Send">
-            </form>
-        </body>
-        </html>
-        '''
+
+            st.write(f"WikiBot: {summary}")
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    main()
