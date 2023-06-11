@@ -2,6 +2,6 @@ Flask
 requests
 Pillow
 beautifulsoup4
-
+transformers
 
 
