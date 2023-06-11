@@ -4,14 +4,7 @@ import io
 from PIL import Image
 import visual_content
 
-# Create a dictionary to store the cached summaries
-summary_cache = {}
-
 def get_wikipedia_summary(page_title):
-    # Check if the summary is already cached
-    if page_title in summary_cache:
-        return summary_cache[page_title]
-
     try:
         # Make a request to the Wikipedia API
         url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{page_title}"
@@ -20,10 +13,7 @@ def get_wikipedia_summary(page_title):
         # Check if the request was successful
         if response.status_code == 200:
             data = response.json()
-            summary = data["extract"]
-            # Cache the retrieved summary
-            summary_cache[page_title] = summary
-            return summary
+            return data["extract"]
         else:
             return "Page not found."
 
@@ -68,13 +58,6 @@ def display_image(image):
     # Display the image
     st.image(image, use_column_width=True)
 
-def display_summary_cache():
-    st.write("Summary Cache:")
-    for page_title, summary in summary_cache.items():
-        st.write(f"Page Title: {page_title}")
-        st.write(f"Summary: {summary}")
-        st.write("---")
-
 def main():
     st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
 
@@ -84,8 +67,6 @@ def main():
     if st.button("Send"):
         if user_input.lower() == "quit":
             st.write("WikiBot: Goodbye!")
-        elif user_input.lower() == "view cache":
-            display_summary_cache()
         else:
             summary = get_wikipedia_summary(user_input)
             visual_urls = get_visual_content(user_input)
