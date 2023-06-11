@@ -1,7 +1,5 @@
 import streamlit as st
 import requests
-import io
-from PIL import Image
 import visual_content
 
 def get_wikipedia_summary(page_title):
@@ -33,30 +31,7 @@ def get_visual_content(page_title):
     except Exception as e:
         return str(e)
 
-def download_image(image_url):
-    try:
-        response = requests.get(image_url)
-        if response.status_code == 200:
-            image_data = response.content
-            image = Image.open(io.BytesIO(image_data))
-            return image
-        else:
-            return None
-    except requests.exceptions.RequestException:
-        return None
-    except Exception as e:
-        return None
 
-def display_image(image):
-    # Resize the image if necessary
-    max_width = 300
-    if image.width > max_width:
-        ratio = max_width / float(image.width)
-        height = int((float(image.height) * float(ratio)))
-        image = image.resize((max_width, height), Image.ANTIALIAS)
-
-    # Display the image
-    st.image(image, use_column_width=True)
 
 def main():
     st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
@@ -73,6 +48,7 @@ def main():
 
             st.write(f"WikiBot: {summary}")
 
-            
+
 if __name__ == '__main__':
     main()
+
