@@ -3,7 +3,7 @@ import requests
 import io
 from PIL import Image
 import visual_content
-from transformers import pipeline, GPT2Tokenizer, GPT2LMHeadModel
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 def get_wikipedia_summary(page_title):
     try:
@@ -61,6 +61,7 @@ def display_image(image):
 
 def main():
     st.set_page_config(page_title="ChatBot", page_icon="chatbot_icon.png")
+
     st.title("ChatBot")
 
     # Model selection
@@ -90,13 +91,11 @@ def main():
             if user_input.lower() == "quit":
                 st.write("Hugging GPT: Goodbye!")
             else:
-                tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-                model = GPT2LMHeadModel.from_pretrained("gpt2")
+                tokenizer = AutoTokenizer.from_pretrained("facebook/blenderbot-400M-distill")
+                model = AutoModelForSeq2SeqLM.from_pretrained("facebook/blenderbot-400M-distill")
 
-                inputs = tokenizer.encode(user_input, return_tensors="pt")
-                outputs = model.generate(inputs, max_length=50, num_return_sequences=1)
-                response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-                st.write(f"Hugging GPT: {response}")
+                # Further processing and generating responses using the tokenizer and model
+                # ...
 
 if __name__ == '__main__':
     main()
