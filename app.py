@@ -73,11 +73,6 @@ def main():
 
             st.write(f"WikiBot: {summary}")
 
-            if visual_urls:
-                for image_url in visual_urls:
-                    image = download_image(image_url)
-                    if image:
-                        display_image(image)
 
 if __name__ == '__main__':
     main()
