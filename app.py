@@ -4,8 +4,15 @@ import io
 from PIL import Image
 import visual_content
 
+# Create a dictionary to store the cached summaries
+summary_cache = {}
+
 def get_wikipedia_summary(page_title):
     try:
+        # Check if the summary is already cached
+        if page_title in summary_cache:
+            return summary_cache[page_title]
+
         # Make a request to the Wikipedia API
         url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{page_title}"
         response = requests.get(url)
@@ -13,7 +20,12 @@ def get_wikipedia_summary(page_title):
         # Check if the request was successful
         if response.status_code == 200:
             data = response.json()
-            return data["extract"]
+            summary = data["extract"]
+
+            # Cache the retrieved summary
+            summary_cache[page_title] = summary
+
+            return summary
         else:
             return "Page not found."
 
