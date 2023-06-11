@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import visual_content
 
 def get_wikipedia_summary(page_title):
     try:
@@ -24,13 +23,6 @@ def get_wikipedia_summary(page_title):
     except Exception as e:
         return str(e)
 
-def get_visual_content(page_title):
-    try:
-        urls = visual_content.retrieve_visual_content(page_title)
-        return urls
-    except Exception as e:
-        return str(e)
-
 
 
 def main():
@@ -44,7 +36,6 @@ def main():
             st.write("WikiBot: Goodbye!")
         else:
             summary = get_wikipedia_summary(user_input)
-            visual_urls = get_visual_content(user_input)
 
             st.write(f"WikiBot: {summary}")
 
