@@ -3,7 +3,6 @@ import requests
 import io
 from PIL import Image
 import visual_content
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 def get_wikipedia_summary(page_title):
     try:
@@ -60,42 +59,25 @@ def display_image(image):
     st.image(image, use_column_width=True)
 
 def main():
-    st.set_page_config(page_title="ChatBot", page_icon="chatbot_icon.png")
+    st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
 
-    st.title("ChatBot")
+    st.title("WikiBot")
 
-    # Model selection
-    model_options = ["WikiBot", "Hugging GPT"]
-    selected_model = st.selectbox("Select a model", model_options)
+    user_input = st.text_input("User Input")
+    if st.button("Send"):
+        if user_input.lower() == "quit":
+            st.write("WikiBot: Goodbye!")
+        else:
+            summary = get_wikipedia_summary(user_input)
+            visual_urls = get_visual_content(user_input)
 
-    if selected_model == "WikiBot":
-        user_input = st.text_input("User Input")
-        if st.button("Send"):
-            if user_input.lower() == "quit":
-                st.write("WikiBot: Goodbye!")
-            else:
-                summary = get_wikipedia_summary(user_input)
-                visual_urls = get_visual_content(user_input)
+            st.write(f"WikiBot: {summary}")
 
-                st.write(f"WikiBot: {summary}")
-
-                if visual_urls:
-                    for image_url in visual_urls:
-                        image = download_image(image_url)
-                        if image:
-                            display_image(image)
-
-    elif selected_model == "Hugging GPT":
-        user_input = st.text_input("User Input")
-        if st.button("Send"):
-            if user_input.lower() == "quit":
-                st.write("Hugging GPT: Goodbye!")
-            else:
-                tokenizer = AutoTokenizer.from_pretrained("facebook/blenderbot-400M-distill")
-                model = AutoModelForSeq2SeqLM.from_pretrained("facebook/blenderbot-400M-distill")
-
-                # Further processing and generating responses using the tokenizer and model
-                # ...
+            if visual_urls:
+                for image_url in visual_urls:
+                    image = download_image(image_url)
+                    if image:
+                        display_image(image)
 
 if __name__ == '__main__':
     main()
