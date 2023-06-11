@@ -3,6 +3,7 @@ import requests
 import io
 from PIL import Image
 import visual_content
+from transformers import pipeline
 
 def get_wikipedia_summary(page_title):
     try:
@@ -59,25 +60,40 @@ def display_image(image):
     st.image(image, use_column_width=True)
 
 def main():
-    st.set_page_config(page_title="WikiBot", page_icon="wikipedia-logo-globe-wikimedia-foundation-png-favpng-9B5MeGD7PRhFGhhMV28ArnFne-removebg-preview.png")
+    st.set_page_config(page_title="ChatBot", page_icon="chatbot_icon.png")
 
-    st.title("WikiBot")
+    st.title("ChatBot")
 
-    user_input = st.text_input("User Input")
-    if st.button("Send"):
-        if user_input.lower() == "quit":
-            st.write("WikiBot: Goodbye!")
-        else:
-            summary = get_wikipedia_summary(user_input)
-            visual_urls = get_visual_content(user_input)
+    # Model selection
+    model_options = ["WikiBot", "Hugging GPT"]
+    selected_model = st.selectbox("Select a model", model_options)
 
-            st.write(f"WikiBot: {summary}")
+    if selected_model == "WikiBot":
+        user_input = st.text_input("User Input")
+        if st.button("Send"):
+            if user_input.lower() == "quit":
+                st.write("WikiBot: Goodbye!")
+            else:
+                summary = get_wikipedia_summary(user_input)
+                visual_urls = get_visual_content(user_input)
 
-            if visual_urls:
-                for image_url in visual_urls:
-                    image = download_image(image_url)
-                    if image:
-                        display_image(image)
+                st.write(f"WikiBot: {summary}")
+
+                if visual_urls:
+                    for image_url in visual_urls:
+                        image = download_image(image_url)
+                        if image:
+                            display_image(image)
+
+    elif selected_model == "Hugging GPT":
+        user_input = st.text_input("User Input")
+        if st.button("Send"):
+            if user_input.lower() == "quit":
+                st.write("Hugging GPT: Goodbye!")
+            else:
+                chatbot = pipeline("text-generation", model="gpt2")
+                response = chatbot(user_input, max_length=50, num_return_sequences=1)
+                st.write(f"Hugging GPT: {response[0]['generated_text']}")
 
 if __name__ == '__main__':
     main()
